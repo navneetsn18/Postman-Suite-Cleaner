@@ -25,7 +25,7 @@ def fixUrls(folders):
     urls = set()
     for folder in folders:
         for request in folder['item']:
-            urls.add(request['request']['url']['raw'])
+            urls.add(request['request']['url']['raw'].split("/")[2])
     
     print("\nNo. Url")
 
@@ -41,17 +41,18 @@ def fixUrls(folders):
             change = input("1. Change Version \n2. Change Complete Url")
             if change == "1":
                 version = input("Enter the new version (Eg: 11-22-1-0-dev)")
-                updatedUrl = updateUrl(urls[int(choice)-1],version)
                 for folder in folders:
                     for request in folder['item']:
-                        if request['request']['url']['raw'] == urls[int(choice)-1]:
+                        if request['request']['url']['raw'].split("/")[2] == urls[int(choice)-1]:
+                            updatedUrl = updateUrl(request['request']['url']['raw'],version)
                             request['request']['url']['raw'] = updatedUrl
+                            request['request']['url']['host'][0] = updatedUrl.split("/")[2].split(".")[0]
             elif change == "2":
-                url = input("Enter the complete Url")
+                updatedUrl = input("Enter the complete Url")
                 for folder in folders:
                     for request in folder['item']:
-                        if request['request']['url']['raw'] == urls[int(choice)-1]:
-                            request['request']['url']['raw'] = url
+                        if request['request']['url']['raw'].split("/")[2] == urls[int(choice)-1]:
+                            request['request']['url']['host'][0] = updatedUrl.split("/")[2].split(".")[0]
             else:
                 print("Incorrect Input")
             
